@@ -1,13 +1,7 @@
 import unittest
-import sys
-import os
 
-# este código hace que Python pueda encontrar e importar archivos para usarlos
-current_dir = os.path.dirname(os.path.abspath(__file__))  # .github/core/test/
-parent_dir = os.path.dirname(current_dir)  # .github/core/
-sys.path.insert(0, parent_dir)
 
-from board import Board
+from core.board import Board
 
 
 class TestBoard(unittest.TestCase):
