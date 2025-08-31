@@ -1,11 +1,6 @@
 import unittest
-import sys
-import os
 
-# este código hace que Python pueda encontrar e importar archivos
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from dice import Dice
+from core.dice import Dice
 
 
 class TestDice(unittest.TestCase):
