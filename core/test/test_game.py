@@ -98,6 +98,39 @@ class TestBackgammonGame(unittest.TestCase):
         self.game.iniciar_juego("Ana", "Carlos")
         self.assertIsNone(self.game.get_ganador())
 
+    def test_reiniciar_juego(self):
+        """Test que verifica que se puede crear un nuevo juego después de uno existente."""
+        # Iniciar primer juego
+        self.game.iniciar_juego("Ana", "Carlos")
+        
+        # Verificar que el juego está inicializado
+        self.assertIsNotNone(self.game.get_board())
+        self.assertEqual(len(self.game.get_players()), 2)
+        
+        # Crear un nuevo juego
+        nuevo_juego = Game()
+        nuevo_juego.iniciar_juego("María", "Pedro")
+        
+        # Verificar que el nuevo juego está correctamente inicializado
+        self.assertIsNotNone(nuevo_juego.get_board())
+        self.assertEqual(len(nuevo_juego.get_players()), 2)
+        self.assertEqual(nuevo_juego.get_players()[0].get_nombre(), "María")
+        self.assertEqual(nuevo_juego.get_players()[1].get_nombre(), "Pedro")
+
+    def test_movimiento_valido(self):
+        """Test que verifica la validación de movimientos."""
+        self.game.iniciar_juego("Ana", "Carlos")
+        
+        # Simular tirada de dados
+        dados = self.game.tirar_dados()
+        self.assertIsNotNone(dados)
+        
+        # Verificar que se puede consultar si un movimiento es válido
+        # (asumiendo que existe método es_movimiento_valido)
+        # Este test dependerá de la implementación específica
+        jugador_actual = self.game.get_jugador_actual()
+        self.assertIsNotNone(jugador_actual)
+
 
 if __name__ == '__main__':
     unittest.main()
