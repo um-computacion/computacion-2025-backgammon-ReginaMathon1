@@ -42,6 +42,42 @@ class TestDice(unittest.TestCase):
         resultado = self.dice.tirar()
         for valor in resultado:
             self.assertIn(valor, [1, 2, 3, 4, 5, 6])
+    
+    def test_dobles_returns_four_values(self):
+        """Test que verifica que cuando salen dobles se retornan 4 valores iguales"""
+        # Realizamos múltiples tiradas para aumentar probabilidad de obtener dobles
+        dobles_encontrados = False
+        for _ in range(100):  # Intentamos hasta 100 veces
+            resultado = self.dice.tirar()
+            dado1 = self.dice.get_dado1()
+            dado2 = self.dice.get_dado2()
+            
+            if dado1 == dado2:  # Si son dobles
+                self.assertEqual(len(resultado), 4)
+                self.assertTrue(all(valor == dado1 for valor in resultado))
+                dobles_encontrados = True
+                break
+        
+        # Si no encontramos dobles en 100 intentos, al menos verificamos que el formato es correcto
+        if not dobles_encontrados:
+            resultado = self.dice.tirar()
+            self.assertIn(len(resultado), [2, 4])
+    
+    def test_multiple_tiradas_independence(self):
+        """Test que verifica que múltiples tiradas son independientes"""
+        resultados = []
+        for _ in range(10):
+            resultado = self.dice.tirar()
+            resultados.append((self.dice.get_dado1(), self.dice.get_dado2()))
+        
+        # Verificamos que no todos los resultados son iguales (muy improbable)
+        valores_unicos = set(resultados)
+        self.assertGreater(len(valores_unicos), 1, "Es extremadamente improbable que 10 tiradas sean idénticas")
+        
+        # Verificamos que cada resultado individual es válido
+        for dado1, dado2 in resultados:
+            self.assertIn(dado1, [1, 2, 3, 4, 5, 6])
+            self.assertIn(dado2, [1, 2, 3, 4, 5, 6])
 
 
 if __name__ == '__main__':
