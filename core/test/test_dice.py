@@ -80,5 +80,5 @@ class TestDice(unittest.TestCase):
             self.assertIn(dado2, [1, 2, 3, 4, 5, 6])
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  
     unittest.main()
