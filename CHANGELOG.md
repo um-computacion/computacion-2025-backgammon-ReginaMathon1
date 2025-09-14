@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.4.0] - 2025-01-01
+### Agregado
+- **Clase Game** (`core/game.py`)
+  - Atributos: `__tablero__`, `__jugador1__`, `__jugador2__`, `__jugador_actual__`, `__dados__`, `__estado__`
+  - Estado inicial: "esperando_dados"
+  - Métodos de configuración: `get_tablero()`, `get_jugador1()`, `get_jugador2()`, `get_jugador_actual()`, `get_dados()`, `get_estado()`
+  - Métodos de juego: `tirar_dados()`, `cambiar_turno()`, `hacer_movimiento()`, `es_movimiento_valido()`, `juego_terminado()`
+  - Validaciones de movimientos según reglas de backgammon
+  - Manejo de estados del juego
+  - Métodos especiales: `__str__()`
+- **Clase Move** (`core/move.py`)
+  - Atributos: `__desde__`, `__hasta__`, `__jugador__`
+  - Validación de posiciones (0-25, donde 0=bar, 25=home)
+  - Métodos: `get_desde()`, `get_hasta()`, `get_jugador()`, `get_distancia()`
+  - Cálculo automático de distancia del movimiento
+  - Métodos especiales: `__str__()`, `__eq__()`
+- **Tests para Game** (`core/test/test_game.py`)
+  - Tests de inicialización de todos los atributos
+  - Validación de configuración inicial del juego
+  - Tests de tirada de dados y cambio de estado
+  - Tests de cambio de turno entre jugadores
+  - Tests de validación de movimientos
+  - Tests de detección de fin de juego
+- **Tests para Move** (`core/test/test_move.py`)
+  - Tests de inicialización de atributos
+  - Validación de posiciones válidas (0-25)
+  - Tests de cálculo de distancia
+  - Tests de igualdad entre movimientos
+  - Validación de representación string
+
 ## [0.3.0] - 2025-08-31
 ### Agregado
 - **Clase Player** (`core/player.py`)
