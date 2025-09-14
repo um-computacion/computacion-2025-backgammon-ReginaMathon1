@@ -81,6 +81,12 @@ class TestPlayer(unittest.TestCase):
         """Test que verifica que jugadores diferentes no son iguales."""
         player2 = Player("Carlos", "black")
         self.assertNotEqual(self.player, player2)
+    
+    def test_set_fichas_boundary_value(self):
+        """Test que verifica que set_fichas funciona con el valor límite 15."""
+        self.player.set_fichas(5)
+        self.player.set_fichas(15)
+        self.assertEqual(self.player.get_fichas(), 15)
 
 
 if __name__ == '__main__':
