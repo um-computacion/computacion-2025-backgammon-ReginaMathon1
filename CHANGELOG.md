@@ -1,6 +1,23 @@
 # Changelog
 
-## [0.4.0] - 2025-01-01
+## [0.5.0] - 2025-09-15
+### Agregado
+- **Clase Checker** (`core/checker.py`)
+  - Atributo: `__color__` (validado como 'white' o 'black')
+  - Métodos de información: `get_color()`
+  - Métodos de lógica de juego: `es_del_jugador()`, `puede_ser_capturada_por()`
+  - Validación de colores en constructor
+  - Métodos especiales: `__str__()`, `__eq__()`, `__repr__()`
+### Modificado
+- **Clase Board** (`core/board.py`)
+  - Refactorizada para usar objetos Checker en lugar de tuplas
+  - Cada punto ahora contiene una lista de objetos Checker
+  - Nuevos métodos: `tiene_fichas()`, `get_color_punto()`, `get_cantidad_fichas()`
+  - Nuevos métodos: `agregar_ficha()`, `quitar_ficha()`
+  - Validación para evitar mezclar colores en un punto
+  - Separación clara de responsabilidades: Board maneja tablero, Checker maneja fichas
+
+## [0.4.0] - 2025-09-14
 ### Agregado
 - **Clase Game** (`core/game.py`)
   - Atributos: `__tablero__`, `__jugador1__`, `__jugador2__`, `__jugador_actual__`, `__dados__`, `__estado__`
