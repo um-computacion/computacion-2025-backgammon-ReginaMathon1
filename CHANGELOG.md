@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.0] - 2025-01-12
+### Agregado
+- **Nuevas funcionalidades para el proyecto**
+  - Completar clase game 
+
 ## [0.5.0] - 2025-09-15
 ### Agregado
 - **Clase Checker** (`core/checker.py`)
