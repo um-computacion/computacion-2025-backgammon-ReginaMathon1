@@ -1,6 +1,58 @@
 # Changelog
 
-## [0.6.0] - 2025-0--16
+## [0.7.0] - 2025-10-20
+### Agregado
+- **Interfaz CLI** (`cli/main.py`)
+  - Clase `BackgammonCLI` para manejar la interfaz de línea de comandos
+  - Menú principal con opciones: Nueva Partida, Ver Reglas, Salir
+  - Sistema completo de juego con turnos y movimientos
+  - Visualización del tablero en formato texto
+  - Indicadores de fichas capturadas (barra) y fichas sacadas (casa)
+  - Sistema de ayuda interactivo durante el juego
+  - Validación de entrada del usuario
+  - Manejo de excepciones y errores
+  - Pantalla de bienvenida y resultado final
+  - Representación visual con símbolos: ⚪ (blancas), ⚫ (negras)
+- **Funcionalidad de movimientos**
+  - Sistema de tirada de dados con visualización
+  - Validación de movimientos según reglas de backgammon
+  - Manejo de fichas en la barra (capturadas)
+  - Sistema de "bear off" (sacar fichas)
+  - Detección automática de movimientos disponibles
+- **Documentación de juego**
+  - Pantalla de reglas completas del backgammon
+  - Ayuda contextual durante los movimientos
+  - Instrucciones de dirección de movimiento para cada color
+
+## [0.6.0] - 2025-10-01
+### Agregado
+- **Clase Game completa** (`core/game.py`)
+  - Atributos: `__board__`, `__players__`, `__dice__`, `__turno__`, `__ultimo_roll__`
+  - Atributos adicionales: `__movimientos_disponibles__`, `__bar__`, `__home__`
+  - Método `iniciar_juego()` para preparar una nueva partida
+  - Método `__determinar_primer_turno__()` para sorteo inicial
+  - Getters para todos los atributos del juego
+  - Método `cambiar_turno()` para alternar entre jugadores
+  - Método `tirar_dados()` con actualización de movimientos disponibles
+  - Método `hacer_movimiento()` para ejecutar movimientos válidos
+  - Método `es_movimiento_valido()` con validación completa de reglas
+  - Método `__calcular_distancia__()` según color del jugador
+  - Método `tiene_movimientos_disponibles()` para verificar jugabilidad
+  - Método `__puede_bear_off__()` para validar salida de fichas
+  - Métodos de finalización: `esta_terminado()`, `get_ganador()`
+  - Método `get_estado_juego()` para obtener snapshot del estado
+  - Método `reiniciar_juego()` para comenzar nueva partida
+  - Método especial `__str__()` para representación del estado
+- **Lógica de captura**
+  - Manejo de fichas capturadas en `__bar__`
+  - Validación de reentrada desde la barra
+  - Obligación de mover fichas de la barra antes que otras
+- **Lógica de bear off**
+  - Validación de casa completa antes de sacar fichas
+  - Manejo de fichas sacadas en `__home__`
+  - Control de victoria (15 fichas en home)
+
+## [0.6.0] - 2025-09-16
 ### Agregado
 - **Nuevas funcionalidades para el proyecto**
   - Completar clase game 
