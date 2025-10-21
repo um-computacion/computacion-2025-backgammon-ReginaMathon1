@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.0] - 2025-01-12
+## [0.6.0] - 2025-0--16
 ### Agregado
 - **Nuevas funcionalidades para el proyecto**
   - Completar clase game 
