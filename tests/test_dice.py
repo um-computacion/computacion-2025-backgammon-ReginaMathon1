@@ -79,6 +79,42 @@ class TestDice(unittest.TestCase):
             self.assertIn(dado1, [1, 2, 3, 4, 5, 6])
             self.assertIn(dado2, [1, 2, 3, 4, 5, 6])
 
+    def test_es_doble_sin_tirar(self):
+        """Test que verifica es_doble cuando no se han tirado dados."""
+        self.assertFalse(self.dice.es_doble())
+
+    def test_get_valores_sin_tirar(self):
+        """Test que verifica get_valores cuando no se han tirado dados."""
+        valores = self.dice.get_valores()
+        self.assertEqual(valores, (None, None))
+
+    def test_str_sin_tirar(self):
+        """Test que verifica __str__ sin tirar dados."""
+        resultado = str(self.dice)
+        self.assertEqual(resultado, "Dados: No se han tirado aún")
+
+    def test_str_con_dados_normales(self):
+        """Test que verifica __str__ con dados diferentes."""
+        # Tirar hasta obtener dados diferentes
+        for _ in range(50):
+            self.dice.tirar()
+            if not self.dice.es_doble():
+                resultado = str(self.dice)
+                self.assertIn("Dados:", resultado)
+                self.assertNotIn("DOBLES", resultado)
+                break
+
+    def test_str_con_dobles(self):
+        """Test que verifica __str__ con dobles."""
+        # Tirar hasta obtener dobles
+        for _ in range(100):
+            self.dice.tirar()
+            if self.dice.es_doble():
+                resultado = str(self.dice)
+                self.assertIn("Dados:", resultado)
+                self.assertIn("DOBLES", resultado)
+                break
+
 
 if __name__ == '__main__':  
     unittest.main()

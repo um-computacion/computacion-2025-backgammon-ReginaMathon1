@@ -88,6 +88,12 @@ class TestPlayer(unittest.TestCase):
         self.player.set_fichas(15)
         self.assertEqual(self.player.get_fichas(), 15)
 
+    def test_equality_with_non_player(self):
+        """Test que verifica comparación con objetos que no son Player."""
+        self.assertNotEqual(self.player, "Ana")
+        self.assertNotEqual(self.player, None)
+        self.assertNotEqual(self.player, 123)
+
 
 if __name__ == '__main__':
     unittest.main()

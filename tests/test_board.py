@@ -94,6 +94,28 @@ class TestBoard(unittest.TestCase):
         self.assertIsNone(ficha_quitada)
         self.assertEqual(self.board.get_cantidad_fichas(2), 0)
 
+    def test_get_punto_posicion_invalida_baja(self):
+        """Test que verifica excepción con posición 0."""
+        with self.assertRaises(ValueError):
+            self.board.get_punto(0)
+
+    def test_get_punto_posicion_invalida_alta(self):
+        """Test que verifica excepción con posición 25."""
+        with self.assertRaises(ValueError):
+            self.board.get_punto(25)
+
+    def test_agregar_ficha_no_checker(self):
+        """Test que verifica que solo se pueden agregar objetos Checker."""
+        with self.assertRaises(ValueError):
+            self.board.agregar_ficha(1, "not a checker")
+
+    def test_str_representation(self):
+        """Test que verifica la representación string del tablero."""
+        resultado = str(self.board)
+        self.assertIsInstance(resultado, str)
+        self.assertIn("Tablero de Backgammon", resultado)
+        self.assertIn("Punto", resultado)
+
 
 if __name__ == '__main__':
     unittest.main()
