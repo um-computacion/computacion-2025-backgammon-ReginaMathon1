@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.8.0] - 2025-10-28
+### Agregado
+- **Tests exhaustivos para Game** (`tests/test_game.py`)
+  - `test_get_bar_y_home()` - Validación de bar y home iniciales
+  - `test_es_movimiento_valido_sin_movimientos()` - Validación sin dados tirados
+  - `test_es_movimiento_valido_posiciones_invalidas()` - Validación de posiciones fuera de rango
+  - `test_hacer_movimiento_completo()` - Ejecución de movimiento válido completo
+  - `test_hacer_movimiento_con_captura()` - Movimiento que captura ficha enemiga
+  - `test_hacer_movimiento_bear_off()` - Movimiento de sacar fichas (bear off)
+  - `test_hacer_movimiento_desde_barra()` - Movimiento desde la barra
+  - `test_es_movimiento_valido_desde_barra_vacia()` - Validación con barra vacía
+  - `test_es_movimiento_valido_con_fichas_en_barra()` - Obligación de mover desde barra
+  - `test_es_movimiento_valido_punto_bloqueado()` - Validación con punto bloqueado
+  - `test_tiene_movimientos_disponibles_true()` - Verificación de movimientos al inicio
+  - `test_tiene_movimientos_disponibles_false_sin_dados()` - Sin movimientos sin dados
+  - `test_get_ganador_con_victoria()` - Obtener ganador cuando alguien ganó
+  - `test_get_estado_juego_completo()` - Estado del juego con todos sus campos
+  - `test_str_sin_iniciar()` - Representación string sin iniciar
+  - `test_str_iniciado()` - Representación string con juego iniciado
+  - `test_reiniciar_juego_completo()` - Reiniciar juego correctamente
+  - `test_calcular_distancia_blancas()` - Cálculo de distancia para blancas
+  - `test_calcular_distancia_negras()` - Cálculo de distancia para negras
+  - `test_iniciar_con_nombres_default()` - Iniciar con nombres por defecto
+  - `test_hacer_movimiento_desde_punto_sin_fichas_propias()` - Movimiento inválido desde punto enemigo
+  - `test_es_movimiento_valido_distancia_cero_o_negativa()` - Validación de distancia inválida
+  - `test_tiene_movimientos_desde_barra_bloqueada_completamente()` - Barra bloqueada
+  - `test_puede_bear_off_con_fichas_fuera_de_casa()` - Bear off con fichas fuera de casa
+  - `test_tiene_movimientos_busca_en_todo_el_tablero()` - Búsqueda completa de movimientos
+  - `test_hacer_movimiento_a_punto_con_dos_fichas_enemigas()` - Movimiento a punto bloqueado
+- **Tests adicionales para Dice** (`tests/test_dice.py`)
+  - `test_es_doble_sin_tirar()` - Verificación de dobles sin tirar
+  - `test_get_valores_sin_tirar()` - Obtener valores sin tirar
+  - `test_str_sin_tirar()` - Representación string sin tirar
+  - `test_str_con_dados_normales()` - Representación con dados diferentes
+  - `test_str_con_dobles()` - Representación con dobles
+- **Tests adicionales para Player** (`tests/test_player.py`)
+  - `test_equality_with_non_player()` - Comparación con objetos no-Player
+- **Tests adicionales para Checker** (`tests/test_checker.py`)
+  - `test_equality_with_non_checker()` - Comparación con objetos no-Checker
+- **Tests adicionales para Board** (`tests/test_board.py`)
+  - `test_get_punto_posicion_invalida_baja()` - Validación con posición 0
+  - `test_get_punto_posicion_invalida_alta()` - Validación con posición 25
+  - `test_agregar_ficha_no_checker()` - Validación de tipo de objeto
+  - `test_str_representation()` - Representación string del tablero
+
 ## [0.7.0] - 2025-10-20
 ### Agregado
 - **Interfaz CLI** (`cli/main.py`)

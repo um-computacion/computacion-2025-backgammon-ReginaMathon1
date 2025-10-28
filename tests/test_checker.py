@@ -64,6 +64,12 @@ class TestChecker(unittest.TestCase):
         self.assertEqual(repr(self.checker_white), "Checker('white')")
         self.assertEqual(repr(self.checker_black), "Checker('black')")
 
+    def test_equality_with_non_checker(self):
+        """Test que verifica comparación con objetos que no son Checker."""
+        self.assertNotEqual(self.checker_white, "white")
+        self.assertNotEqual(self.checker_white, None)
+        self.assertNotEqual(self.checker_white, 123)
+
 
 if __name__ == '__main__':
     unittest.main()
