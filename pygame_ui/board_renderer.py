@@ -154,39 +154,33 @@ class BoardRenderer:
             self.surface.blit(label, label_rect)
     
     def _draw_home_areas(self):
-        """Dibuja las áreas de home (fuera del tablero)."""
+        """Dibuja las áreas HOME para fichas sacadas."""
         board_width = 12 * PUNTO_WIDTH + BARRA_WIDTH
         
-        # Home para blancas (derecha arriba)
-        home_white_x = BOARD_MARGIN + board_width + 20
-        home_white_rect = pygame.Rect(home_white_x, BOARD_MARGIN + 20, 100, 200)
-        pygame.draw.rect(self.surface, (220, 220, 220), home_white_rect, 3, border_radius=5)
+        # HOME más amplio y centrado verticalmente
+        home_x = BOARD_MARGIN + board_width + 20
+        home_y_top = BOARD_MARGIN + 20
+        home_y_bottom = BOARD_MARGIN + 2 * PUNTO_HEIGHT - HOME_HEIGHT - 20
         
-        # Fondo semi-transparente
-        s = pygame.Surface((100, 200))
-        s.set_alpha(100)
-        s.fill((255, 255, 255))
-        self.surface.blit(s, (home_white_x, BOARD_MARGIN + 20))
+        # HOME superior (blancas) - CORREGIDO
+        pygame.draw.rect(self.surface, (255, 255, 255), 
+                        (home_x, home_y_top, HOME_WIDTH, HOME_HEIGHT))
+        pygame.draw.rect(self.surface, COLOR_PUNTO_CLARO, 
+                        (home_x, home_y_top, HOME_WIDTH, HOME_HEIGHT), 3)
         
-        text = self.font.render("HOME", True, COLOR_TEXTO)
-        self.surface.blit(text, (home_white_x + 20, BOARD_MARGIN))
-        text2 = self.font_large.render("⚪", True, (255, 255, 255))
-        self.surface.blit(text2, (home_white_x + 35, BOARD_MARGIN + 90))
+        # HOME inferior (negras) - CORREGIDO
+        pygame.draw.rect(self.surface, (255, 255, 255), 
+                        (home_x, home_y_bottom, HOME_WIDTH, HOME_HEIGHT))
+        pygame.draw.rect(self.surface, COLOR_PUNTO_OSCURO, 
+                        (home_x, home_y_bottom, HOME_WIDTH, HOME_HEIGHT), 3)
         
-        # Home para negras (derecha abajo)
-        home_black_rect = pygame.Rect(home_white_x, BOARD_MARGIN + PUNTO_HEIGHT + 80, 100, 200)
-        pygame.draw.rect(self.surface, (80, 80, 80), home_black_rect, 3, border_radius=5)
+        # Etiquetas
+        font = pygame.font.Font(None, 24)
+        label_top = font.render("HOME", True, (50, 50, 50))
+        label_bottom = font.render("HOME", True, (50, 50, 50))
         
-        # Fondo semi-transparente
-        s2 = pygame.Surface((100, 200))
-        s2.set_alpha(100)
-        s2.fill((50, 50, 50))
-        self.surface.blit(s2, (home_white_x, BOARD_MARGIN + PUNTO_HEIGHT + 80))
-        
-        text3 = self.font.render("HOME", True, COLOR_TEXTO)
-        self.surface.blit(text3, (home_white_x + 20, BOARD_MARGIN + PUNTO_HEIGHT + 60))
-        text4 = self.font_large.render("⚫", True, (200, 200, 200))
-        self.surface.blit(text4, (home_white_x + 35, BOARD_MARGIN + PUNTO_HEIGHT + 160))
+        self.surface.blit(label_top, (home_x + 25, home_y_top - 25))
+        self.surface.blit(label_bottom, (home_x + 25, home_y_bottom + HOME_HEIGHT + 5))
     
     def get_punto_position(self, punto_num):
         """
@@ -242,20 +236,21 @@ class BoardRenderer:
     
     def get_home_position(self, color):
         """
-        Obtiene la posición del área home.
+        Retorna la posición del área HOME para un color.
         
         Args:
             color: 'white' o 'black'
             
         Returns:
-            tuple: (x, y) posición del área home
+            tuple: (x, y) posición inicial para apilar fichas en HOME
         """
         board_width = 12 * PUNTO_WIDTH + BARRA_WIDTH
-        x = BOARD_MARGIN + board_width + 70
+        home_x = BOARD_MARGIN + board_width + 30  # Más margen interno
         
+        # CORREGIDO: blancas arriba, negras abajo
         if color == 'white':
-            y = BOARD_MARGIN + 120
+            home_y = BOARD_MARGIN + 30  # Arriba para blancas
         else:
-            y = BOARD_MARGIN + PUNTO_HEIGHT + 180
+            home_y = BOARD_MARGIN + 2 * PUNTO_HEIGHT - HOME_HEIGHT - 10  # Abajo para negras
         
-        return (x, y)
+        return (home_x, home_y)

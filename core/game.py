@@ -57,29 +57,77 @@ class Game:
         return self.__ultimo_roll__
     
     def hacer_movimiento(self, desde, hasta):
-        """Ejecuta un movimiento de ficha."""
+        """
+        Ejecuta un movimiento si es válido.
+        
+        Args:
+            desde (int): Posición origen (0=barra, 1-24=puntos, 25=no aplica)
+            hasta (int): Posición destino (1-24=puntos, 25=home)
+            
+        Returns:
+            bool: True si el movimiento fue exitoso, False si no
+        """
         if not self.es_movimiento_valido(desde, hasta):
             return False
         
-        color_jugador = self.get_jugador_actual().get_color()
-        distancia = self.__calcular_distancia__(desde, hasta, color_jugador)
+        jugador_actual = self.get_jugador_actual()  # CORREGIDO: usar get_jugador_actual()
+        color = jugador_actual.get_color()
+        distancia = self.__calcular_distancia__(desde, hasta, color)
         
-        # Mover ficha
-        ficha = self.__bar__[color_jugador].pop() if desde == 0 else self.__board__.quitar_ficha(desde)
+        # Verificar que la distancia esté en movimientos disponibles
+        if distancia not in self.__movimientos_disponibles__:
+            return False
         
-        if hasta == 25:
-            self.__home__[color_jugador].append(ficha)
+        # Mover desde barra
+        if desde == 0:
+            # Quitar ficha de la barra
+            if self.__bar__[color]:
+                ficha = self.__bar__[color].pop()
+                
+                # Verificar captura en destino
+                if self.__board__.tiene_fichas(hasta):
+                    if self.__board__.get_cantidad_fichas(hasta) == 1:
+                        color_destino = self.__board__.get_color_punto(hasta)
+                        if color_destino != color:
+                            # Capturar ficha enemiga
+                            ficha_capturada = self.__board__.quitar_ficha(hasta)
+                            color_enemigo = 'white' if color == 'black' else 'black'
+                            self.__bar__[color_enemigo].append(ficha_capturada)
+                
+                # Colocar ficha en destino
+                self.__board__.agregar_ficha(hasta, ficha)
+        
+        # Bear off (sacar ficha)
+        elif hasta == 25:
+            ficha = self.__board__.quitar_ficha(desde)
+            self.__home__[color].append(ficha)
+        
+        # Movimiento normal
         else:
-            # Capturar ficha enemiga si existe
-            if (self.__board__.tiene_fichas(hasta) and 
-                self.__board__.get_color_punto(hasta) != color_jugador and 
-                self.__board__.get_cantidad_fichas(hasta) == 1):
-                ficha_capturada = self.__board__.quitar_ficha(hasta)
-                self.__bar__[ficha_capturada.get_color()].append(ficha_capturada)
+            # Verificar captura en destino
+            if self.__board__.tiene_fichas(hasta):
+                if self.__board__.get_cantidad_fichas(hasta) == 1:
+                    color_destino = self.__board__.get_color_punto(hasta)
+                    if color_destino != color:
+                        # Capturar ficha enemiga
+                        ficha_capturada = self.__board__.quitar_ficha(hasta)
+                        color_enemigo = 'white' if color == 'black' else 'black'
+                        self.__bar__[color_enemigo].append(ficha_capturada)
             
+            # Mover ficha
+            ficha = self.__board__.quitar_ficha(desde)
             self.__board__.agregar_ficha(hasta, ficha)
         
-        self.__movimientos_disponibles__.remove(distancia)
+        # Remover movimiento usado
+        try:
+            self.__movimientos_disponibles__.remove(distancia)
+        except ValueError:
+            # Si no está en la lista, podría ser un caso especial de bear-off
+            # donde se usa un número mayor. Intentar remover cualquier valor mayor.
+            movs_mayores = [m for m in self.__movimientos_disponibles__ if m >= distancia]
+            if movs_mayores:
+                self.__movimientos_disponibles__.remove(max(movs_mayores))
+        
         return True
     
     def __calcular_distancia__(self, desde, hasta, color):

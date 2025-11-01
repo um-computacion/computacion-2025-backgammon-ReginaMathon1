@@ -1,0 +1,158 @@
+@startuml BackgammonClassDiagram
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor PaleGreen
+    ArrowColor SeaGreen
+    BorderColor SpringGreen
+}
+
+class Board {
+    - points: Point[]
+    - bar: Bar
+    - off: Off
+    + Board()
+    + getPoints(): Point[]
+    + getBar(): Bar
+    + getOff(): Off
+    + moveChecker(from: number, to: number, color: string): void
+    + isValidMove(from: number, to: number, color: string): boolean
+    + canMove(color: string, diceValues: number[]): boolean
+    + getAllCheckersInHomeBoard(color: string): boolean
+    + getPoint(position: number): Point
+}
+
+class Point {
+    - position: number
+    - checkers: Checker[]
+    + Point(position: number)
+    + getPosition(): number
+    + getCheckers(): Checker[]
+    + addChecker(checker: Checker): void
+    + removeChecker(): Checker
+    + getTopChecker(): Checker
+    + isEmpty(): boolean
+    + getCheckerCount(): number
+    + isBlocked(color: string): boolean
+}
+
+class Checker {
+    - color: string
+    + Checker(color: string)
+    + getColor(): string
+}
+
+class Bar {
+    - checkers: Map
+    + Bar()
+    + addChecker(checker: Checker): void
+    + removeChecker(color: string): Checker
+    + hasCheckers(color: string): boolean
+    + getCheckerCount(color: string): number
+    + getCheckers(color: string): Checker[]
+}
+
+class Off {
+    - checkers: Map
+    + Off()
+    + addChecker(checker: Checker): void
+    + getCheckerCount(color: string): number
+    + hasAllCheckers(color: string): boolean
+    + getCheckers(color: string): Checker[]
+}
+
+class Dice {
+    - values: number[]
+    - usedValues: boolean[]
+    + Dice()
+    + roll(): number[]
+    + getValues(): number[]
+    + getAvailableValues(): number[]
+    + hasRemainingMoves(): boolean
+    + useValue(value: number): void
+    + reset(): void
+    + isDouble(): boolean
+}
+
+class Game {
+    - board: Board
+    - dice: Dice
+    - currentPlayer: string
+    - players: string[]
+    - gameState: string
+    + Game()
+    + start(): void
+    + rollDice(): number[]
+    + makeMove(from: number, to: number): boolean
+    + switchPlayer(): void
+    + getCurrentPlayer(): string
+    + isGameOver(): boolean
+    + getWinner(): string
+    + getGameState(): string
+    + getBoard(): Board
+    + getDice(): Dice
+}
+
+class Player {
+    - color: string
+    - name: string
+    + Player(color: string, name: string)
+    + getColor(): string
+    + getName(): string
+    + setName(name: string): void
+}
+
+class GameController {
+    - game: Game
+    - view: GameView
+    + GameController(game: Game, view: GameView)
+    + handleRollDice(): void
+    + handleMove(from: number, to: number): void
+    + handleEndTurn(): void
+    + updateView(): void
+    + start(): void
+}
+
+class GameView {
+    + GameView()
+    + render(board: Board, currentPlayer: string, diceValues: number[]): void
+    + showMessage(message: string): void
+    + showWinner(winner: string): void
+    + enableInput(): void
+    + disableInput(): void
+    + displayBoard(board: Board): void
+    + displayDice(values: number[]): void
+}
+
+Board "1" *-- "24" Point
+Board "1" *-- "1" Bar
+Board "1" *-- "1" Off
+Point "1" o-- "*" Checker
+Bar "1" o-- "*" Checker
+Off "1" o-- "*" Checker
+Game "1" *-- "1" Board
+Game "1" *-- "1" Dice
+Game "1" o-- "2" Player
+GameController "1" --> "1" Game
+GameController "1" --> "1" GameView
+
+note right of Board
+  El tablero gestiona 24 puntos numerados,
+  la barra para fichas capturadas y
+  las fichas que salen del juego
+end note
+
+note right of Dice
+  Los dados generan valores aleatorios.
+  Si son dobles se permiten 4 movimientos.
+  Rastrea que valores ya fueron usados
+end note
+
+note right of Game
+  Controla el flujo del juego
+  Gestiona turnos
+  Valida movimientos
+  Determina el ganador
+end note
+
+@enduml

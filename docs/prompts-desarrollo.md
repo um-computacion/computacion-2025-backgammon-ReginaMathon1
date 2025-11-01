@@ -1,7 +1,16 @@
-1. Crear clase Board
-Pregunta: Tengo que hacer el juego backgammon pero con varios commit. ahora quiero hacer la clase board con posiciones iniciales. en board.py crear clase board con atributo__puntos__ (lista de 24 posiciones)
+# Prompts de Desarrollo - Backgammon
 
-Class Board:
+Este documento registra todas las consultas realizadas durante el desarrollo del proyecto y las soluciones implementadas.
+
+---
+
+## 1. Crear clase Board
+
+**Pregunta**: Tengo que hacer el juego backgammon pero con varios commit. Ahora quiero hacer la clase board con posiciones iniciales. En board.py crear clase Board con atributo `__puntos__` (lista de 24 posiciones).
+
+**Respuesta**:
+```python
+class Board:
     def __init__(self):
         self.__puntos__ = [None] * 24  # 24 posiciones (índices 0-23 para puntos 1-24)
         
@@ -26,9 +35,16 @@ Class Board:
             return self.__puntos__[posicion - 1]
         else:
             raise ValueError("La posición debe estar entre 1 y 24")
+```
 
-2. Crear clase Dice
-Pregunta: En dice.py crear clase Dice con atributos dado1 y dado2. Método tirar() que devuelva números aleatorios 1-6. Manejar dobles (si ambos dados iguales → se repite)
+---
+
+## 2. Crear clase Dice
+
+**Pregunta**: En dice.py crear clase Dice con atributos dado1 y dado2. Método tirar() que devuelva números aleatorios 1-6. Manejar dobles (si ambos dados iguales → se repite).
+
+**Respuesta**:
+```python
 import random
 
 class Dice:
@@ -51,10 +67,16 @@ class Dice:
     
     def get_dado2(self):
         return self.__dado2__
+```
 
-3. Crear clase Player
-Pregunta: En player.py crear clase Player con atributos nombre, fichas (15), color. Método reset_fichas() que reinicie fichas.
+---
 
+## 3. Crear clase Player
+
+**Pregunta**: En player.py crear clase Player con atributos nombre, fichas (15), color. Método reset_fichas() que reinicie fichas.
+
+**Respuesta**:
+```python
 class Player:
     def __init__(self, nombre, color):
         self.__nombre__ = nombre

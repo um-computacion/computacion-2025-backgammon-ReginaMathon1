@@ -8,7 +8,7 @@ WINDOW_HEIGHT = 900
 FPS = 60
 
 # Colores
-COLOR_BG = (34, 139, 34)  # Verde oscuro para el tablero
+COLOR_BG = (255, 255, 255)  # Fondo blanco en lugar de verde
 COLOR_PUNTO_CLARO = (222, 184, 135)  # Beige
 COLOR_PUNTO_OSCURO = (139, 69, 19)  # Marrón
 COLOR_BARRA = (101, 67, 33)  # Marrón oscuro
@@ -30,6 +30,8 @@ PUNTO_HEIGHT = 250
 BARRA_WIDTH = 60
 FICHA_RADIUS = 22
 FICHA_SPACING = 3
+HOME_HEIGHT = 200  # Altura del área HOME
+HOME_WIDTH = 100   # Ancho del área HOME
 
 # Posiciones
 DADO_SIZE = 50

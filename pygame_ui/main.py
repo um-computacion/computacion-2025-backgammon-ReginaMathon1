@@ -152,12 +152,18 @@ class BackgammonPygame:
                 sprite = CheckerSprite(color, (x, y), None)
                 self.checker_sprites.append(sprite)
             
-            # Fichas en home
+            # Fichas en HOME - organizadas en columnas de 5
             home_fichas = self.game.get_home(color)
             home_pos = self.board_renderer.get_home_position(color)
+            
             for idx, ficha in enumerate(home_fichas):
-                x = home_pos[0] + (idx % 2) * (FICHA_RADIUS + 3) - FICHA_RADIUS // 2
-                y = home_pos[1] + (idx // 2) * (FICHA_RADIUS * 2 + FICHA_SPACING)
+                # 3 columnas, 5 fichas por columna
+                col = idx // 5  # 0, 1, 2
+                row = idx % 5   # 0-4
+                
+                x = home_pos[0] + col * (FICHA_RADIUS * 2 + 4)
+                y = home_pos[1] + row * (FICHA_RADIUS * 2 + 3)
+                
                 sprite = CheckerSprite(color, (x, y), None)
                 self.checker_sprites.append(sprite)
     
