@@ -1,0 +1,40 @@
+"""
+Constantes para la interfaz gráfica de Pygame.
+"""
+
+# Dimensiones de ventana
+WINDOW_WIDTH = 1400
+WINDOW_HEIGHT = 900
+FPS = 60
+
+# Colores
+COLOR_BG = (255, 255, 255)  # Fondo blanco en lugar de verde
+COLOR_PUNTO_CLARO = (222, 184, 135)  # Beige
+COLOR_PUNTO_OSCURO = (139, 69, 19)  # Marrón
+COLOR_BARRA = (101, 67, 33)  # Marrón oscuro
+COLOR_BORDE = (101, 67, 33)
+COLOR_FICHA_WHITE = (255, 255, 255)
+COLOR_FICHA_BLACK = (50, 50, 50)
+COLOR_FICHA_BORDE = (0, 0, 0)
+COLOR_HIGHLIGHT = (255, 215, 0)  # Dorado para resaltar
+COLOR_TEXTO = (255, 255, 255)
+COLOR_DADO_BG = (255, 255, 255)
+COLOR_DADO_PUNTO = (0, 0, 0)
+COLOR_BOTON = (70, 130, 180)
+COLOR_BOTON_HOVER = (100, 149, 237)
+
+# Dimensiones del tablero
+BOARD_MARGIN = 80
+PUNTO_WIDTH = 60
+PUNTO_HEIGHT = 250
+BARRA_WIDTH = 60
+FICHA_RADIUS = 22
+FICHA_SPACING = 3
+HOME_HEIGHT = 200  # Altura del área HOME
+HOME_WIDTH = 100   # Ancho del área HOME
+
+# Posiciones
+DADO_SIZE = 50
+DADO_MARGIN = 20
+BOTON_WIDTH = 180
+BOTON_HEIGHT = 45
