@@ -18,7 +18,7 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
-## [0.10.2] - 2025-11-01
+## [1.0.0] - 2025-11-01
 ### Modificado
 - **Interfaz gráfica Pygame** (`pygame_ui/constants.py`)
   - Color de fondo cambiado de verde a blanco (`COLOR_BG = (255, 255, 255)`)
