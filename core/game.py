@@ -1,0 +1,319 @@
+from .board import Board
+from .player import Player
+from .dice import Dice
+
+
+class Game:
+    def __init__(self):
+        """Inicializa una nueva partida de Backgammon."""
+        self.__board__ = None
+        self.__players__ = []
+        self.__dice__ = None
+        self.__turno__ = 0
+        self.__ultimo_roll__ = None
+        self.__movimientos_disponibles__ = []
+        self.__bar__ = {'white': [], 'black': []}  # Fichas capturadas
+        self.__home__ = {'white': [], 'black': []}  # Fichas que salieron
+    
+    def iniciar_juego(self, nombre_jugador1="Jugador 1", nombre_jugador2="Jugador 2"):
+        """Prepara e inicializa todos los componentes del juego."""
+        self.__board__ = Board()
+        self.__players__ = [Player(nombre_jugador1, "white"), Player(nombre_jugador2, "black")]
+        self.__dice__ = Dice()
+        self.__determinar_primer_turno__()
+        self.__ultimo_roll__ = None
+        self.__movimientos_disponibles__ = []
+        self.__bar__ = {'white': [], 'black': []}
+        self.__home__ = {'white': [], 'black': []}
+    
+    def __determinar_primer_turno__(self):
+        """Determina qué jugador comienza la partida."""
+        while True:
+            dados = [self.__dice__.tirar()[0] for _ in range(2)]
+            if dados[0] != dados[1]:
+                self.__turno__ = 0 if dados[0] > dados[1] else 1
+                break
+    
+    # Getters simplificados
+    def get_board(self): return self.__board__
+    def get_players(self): return self.__players__
+    def get_dice(self): return self.__dice__
+    def get_turno_actual(self): return self.__turno__
+    def get_jugador_actual(self): return self.__players__[self.__turno__]
+    def get_ultimo_roll(self): return self.__ultimo_roll__
+    def get_movimientos_disponibles(self): return self.__movimientos_disponibles__.copy()
+    def get_bar(self, color): return self.__bar__[color].copy()
+    def get_home(self, color): return self.__home__[color].copy()
+    
+    def cambiar_turno(self):
+        self.__turno__ = 1 - self.__turno__
+        self.__ultimo_roll__ = None
+        self.__movimientos_disponibles__ = []
+    
+    def tirar_dados(self):
+        """Tira los dados y actualiza los movimientos disponibles."""
+        self.__ultimo_roll__ = self.__dice__.tirar()
+        self.__movimientos_disponibles__ = self.__ultimo_roll__.copy()
+        return self.__ultimo_roll__
+    
+    def hacer_movimiento(self, desde, hasta):
+        """
+        Ejecuta un movimiento si es válido.
+        
+        Args:
+            desde (int): Posición origen (0=barra, 1-24=puntos, 25=no aplica)
+            hasta (int): Posición destino (1-24=puntos, 25=home)
+            
+        Returns:
+            bool: True si el movimiento fue exitoso, False si no
+        """
+        if not self.es_movimiento_valido(desde, hasta):
+            return False
+        
+        jugador_actual = self.get_jugador_actual()  # CORREGIDO: usar get_jugador_actual()
+        color = jugador_actual.get_color()
+        distancia = self.__calcular_distancia__(desde, hasta, color)
+        
+        # Verificar que la distancia esté en movimientos disponibles
+        if distancia not in self.__movimientos_disponibles__:
+            return False
+        
+        # Mover desde barra
+        if desde == 0:
+            # Quitar ficha de la barra
+            if self.__bar__[color]:
+                ficha = self.__bar__[color].pop()
+                
+                # Verificar captura en destino
+                if self.__board__.tiene_fichas(hasta):
+                    if self.__board__.get_cantidad_fichas(hasta) == 1:
+                        color_destino = self.__board__.get_color_punto(hasta)
+                        if color_destino != color:
+                            # Capturar ficha enemiga
+                            ficha_capturada = self.__board__.quitar_ficha(hasta)
+                            color_enemigo = 'white' if color == 'black' else 'black'
+                            self.__bar__[color_enemigo].append(ficha_capturada)
+                
+                # Colocar ficha en destino
+                self.__board__.agregar_ficha(hasta, ficha)
+        
+        # Bear off (sacar ficha)
+        elif hasta == 25:
+            ficha = self.__board__.quitar_ficha(desde)
+            self.__home__[color].append(ficha)
+        
+        # Movimiento normal
+        else:
+            # Verificar captura en destino
+            if self.__board__.tiene_fichas(hasta):
+                if self.__board__.get_cantidad_fichas(hasta) == 1:
+                    color_destino = self.__board__.get_color_punto(hasta)
+                    if color_destino != color:
+                        # Capturar ficha enemiga
+                        ficha_capturada = self.__board__.quitar_ficha(hasta)
+                        color_enemigo = 'white' if color == 'black' else 'black'
+                        self.__bar__[color_enemigo].append(ficha_capturada)
+            
+            # Mover ficha
+            ficha = self.__board__.quitar_ficha(desde)
+            self.__board__.agregar_ficha(hasta, ficha)
+        
+        # Remover movimiento usado
+        try:
+            self.__movimientos_disponibles__.remove(distancia)
+        except ValueError:
+            # Si no está en la lista, podría ser un caso especial de bear-off
+            # donde se usa un número mayor. Intentar remover cualquier valor mayor.
+            movs_mayores = [m for m in self.__movimientos_disponibles__ if m >= distancia]
+            if movs_mayores:
+                self.__movimientos_disponibles__.remove(max(movs_mayores))
+        
+        return True
+    
+    def __calcular_distancia__(self, desde, hasta, color):
+        """Calcula la distancia del movimiento."""
+        if hasta == 25:  # Bear off
+            if color == 'white':
+                # Para blancas: distancia desde el punto hasta salir
+                return 25 - desde if desde != 0 else 1
+            else:
+                # Para negras: distancia desde el punto hasta salir
+                return desde if desde != 0 else 1
+        else:
+            # Movimiento normal en el tablero
+            if color == 'white':
+                return hasta - desde if desde != 0 else hasta
+            else:
+                return desde - hasta if desde != 0 else 25 - hasta
+    
+    def es_movimiento_valido(self, desde, hasta):
+        """Verifica si un movimiento es válido."""
+        if not self.__movimientos_disponibles__ or desde < 0 or desde > 24 or hasta < 1 or hasta > 25:
+            return False
+        
+        color_jugador = self.get_jugador_actual().get_color()
+        
+        # Verificar origen
+        if desde == 0:
+            if not self.__bar__[color_jugador]:
+                return False
+        else:
+            if (not self.__board__.tiene_fichas(desde) or 
+                self.__board__.get_color_punto(desde) != color_jugador):
+                return False
+            # Debe mover desde bar primero si hay fichas allí
+            if self.__bar__[color_jugador] and desde != 0:
+                return False
+        
+        # Verificar destino
+        if hasta == 25:
+            # Bear off - sacar fichas
+            if not self.__puede_bear_off__(color_jugador):
+                return False
+            
+            # Verificar que está moviendo desde su casa
+            if desde > 0:
+                if color_jugador == 'white':
+                    # Blancas: casa en puntos 19-24
+                    if not (19 <= desde <= 24):
+                        return False
+                    # Calcular distancia para bear off
+                    distancia_necesaria = 25 - desde
+                else:
+                    # Negras: casa en puntos 1-6
+                    if not (1 <= desde <= 6):
+                        return False
+                    # Calcular distancia para bear off
+                    distancia_necesaria = desde
+                
+                # Verificar si la distancia está disponible en los dados
+                if distancia_necesaria in self.__movimientos_disponibles__:
+                    return True
+                
+                # Permitir bear off con dado mayor si es la ficha más lejana
+                for dado in self.__movimientos_disponibles__:
+                    if dado >= distancia_necesaria:
+                        # Verificar que no hay fichas más lejanas
+                        if self.__es_ficha_mas_lejana__(desde, color_jugador):
+                            return True
+                
+                return False
+            
+            return True
+        else:
+            # Movimiento normal en el tablero
+            distancia = self.__calcular_distancia__(desde, hasta, color_jugador)
+            if distancia <= 0 or distancia not in self.__movimientos_disponibles__:
+                return False
+            
+            return not (self.__board__.tiene_fichas(hasta) and 
+                       self.__board__.get_color_punto(hasta) != color_jugador and 
+                       self.__board__.get_cantidad_fichas(hasta) >= 2)
+    
+    def __es_ficha_mas_lejana__(self, desde, color):
+        """Verifica si la ficha es la más lejana en la casa."""
+        if color == 'white':
+            # Para blancas, verificar puntos menores a 'desde' en el rango 19-24
+            for i in range(19, desde):
+                if (self.__board__.tiene_fichas(i) and 
+                    self.__board__.get_color_punto(i) == color):
+                    return False
+        else:
+            # Para negras, verificar puntos mayores a 'desde' en el rango 1-6
+            for i in range(desde + 1, 7):
+                if (self.__board__.tiene_fichas(i) and 
+                    self.__board__.get_color_punto(i) == color):
+                    return False
+        return True
+    
+    def __puede_bear_off__(self, color):
+        """Verifica si puede sacar fichas del tablero."""
+        if self.__bar__[color]:
+            return False
+        
+        # Definir rangos de casa según el color
+        if color == 'white':
+            home_board = range(19, 25)  # Puntos 19-24 para blancas
+        else:
+            home_board = range(1, 7)    # Puntos 1-6 para negras
+        
+        # Verificar que TODAS las fichas de este color estén en casa o en home
+        for i in range(1, 25):
+            if (self.__board__.tiene_fichas(i) and 
+                self.__board__.get_color_punto(i) == color and 
+                i not in home_board):
+                return False
+        
+        return True
+    
+    def tiene_movimientos_disponibles(self):
+        """Verifica si hay movimientos disponibles."""
+        if not self.__movimientos_disponibles__:
+            return False
+        
+        color_jugador = self.get_jugador_actual().get_color()
+        
+        # Verificar movimientos desde bar
+        if self.__bar__[color_jugador]:
+            for distancia in self.__movimientos_disponibles__:
+                punto_entrada = distancia if color_jugador == 'white' else 25 - distancia
+                if self.es_movimiento_valido(0, punto_entrada):
+                    return True
+            return False
+        
+        # Verificar movimientos desde tablero
+        for i in range(1, 25):
+            if (self.__board__.tiene_fichas(i) and 
+                self.__board__.get_color_punto(i) == color_jugador):
+                
+                for distancia in self.__movimientos_disponibles__:
+                    if color_jugador == 'white':
+                        destino = min(i + distancia, 25)
+                    else:
+                        destino = max(i - distancia, 1) if i - distancia >= 1 else 25
+                    
+                    if self.es_movimiento_valido(i, destino):
+                        return True
+        return False
+    
+    def esta_terminado(self):
+        """Verifica si el juego terminó."""
+        return any(len(self.__home__[jugador.get_color()]) == 15 for jugador in self.__players__)
+    
+    def get_ganador(self):
+        """Retorna el ganador."""
+        for jugador in self.__players__:
+            if len(self.__home__[jugador.get_color()]) == 15:
+                return jugador
+        return None
+    
+    def reiniciar_juego(self):
+        """Reinicia el juego."""
+        self.__init__()
+    
+    def get_estado_juego(self):
+        """Estado actual del juego."""
+        return {
+            'jugador_actual': self.get_jugador_actual().get_nombre() if self.__players__ else None,
+            'ultimo_roll': self.__ultimo_roll__,
+            'movimientos_disponibles': self.__movimientos_disponibles__.copy(),
+            'bar_white': len(self.__bar__['white']),
+            'bar_black': len(self.__bar__['black']),
+            'home_white': len(self.__home__['white']),
+            'home_black': len(self.__home__['black']),
+            'terminado': self.esta_terminado(),
+            'ganador': self.get_ganador().get_nombre() if self.get_ganador() else None
+        }
+    
+    def __str__(self):
+        """Representación string del juego."""
+        if not self.__players__:
+            return "Juego no iniciado"
+        
+        estado = self.get_estado_juego()
+        return (f"Backgammon - {estado['jugador_actual']} | "
+                f"Roll: {estado['ultimo_roll']} | "
+                f"Movimientos: {estado['movimientos_disponibles']} | "
+                f"Bar B/N: {estado['bar_white']}/{estado['bar_black']} | "
+                f"Home B/N: {estado['home_white']}/{estado['home_black']} | "
+                f"{'Terminado' if estado['terminado'] else 'En progreso'}")

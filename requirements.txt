@@ -1,0 +1,9 @@
+pytest
+coverage
+pylint
+pygame
+redis
+black
+flake8
+mypy
+sphinx
